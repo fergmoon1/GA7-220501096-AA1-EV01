@@ -1,33 +1,460 @@
-<!doctype html>
-<html class="no-js" lang="">
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
-  <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Versionamiento Local vs Remoto</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --accent-color: #e74c3c;
+      --text-color: #333;
+      --border-radius: 8px;
+    }
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
 
-  <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#fafafa">
+    header {
+      background-color: var(--dark-color);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h2 {
+      color: var(--dark-color);
+      margin: 1.5rem 0 1rem;
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      color: var(--primary-color);
+      margin: 1.2rem 0 0.8rem;
+      font-size: 1.4rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .intro {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .comparison {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .version-box {
+      flex: 1;
+      min-width: 300px;
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .version-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+    }
+
+    .local::before {
+      background-color: var(--primary-color);
+    }
+
+    .remote::before {
+      background-color: var(--secondary-color);
+    }
+
+    .feature-list {
+      list-style-type: none;
+      margin: 1.5rem 0;
+    }
+
+    .feature-list li {
+      margin-bottom: 0.8rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent-color);
+    }
+
+    .pros-cons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .pros, .cons {
+      flex: 1;
+      min-width: 250px;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+    }
+
+    .pros {
+      background-color: rgba(46, 204, 113, 0.1);
+      border-left: 4px solid var(--secondary-color);
+    }
+
+    .cons {
+      background-color: rgba(231, 76, 60, 0.1);
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .workflow {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .workflow-step {
+      background-color: var(--light-color);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      position: relative;
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      line-height: 30px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .conclusion {
+      background-color: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .highlight {
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    .diagram-img {
+      width: 100%;
+      max-width: 700px;
+      height: auto;
+      background-color: white;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: auto;
+    }
+
+    footer {
+      background-color: var(--dark-color);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .comparison {
+        flex-direction: column;
+      }
+
+      .version-box {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
-
 <body>
+<header>
+  <h1>Versionamiento Local vs Remoto</h1>
+  <p>Una guía completa para entender las diferencias y mejores prácticas</p>
+</header>
 
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <script src="js/app.js"></script>
+<div class="container">
+  <section class="intro">
+    <h2>¿Qué es el Control de Versiones?</h2>
+    <p>El <span class="highlight">control de versiones</span> es un sistema que registra los cambios realizados en un archivo o conjunto de archivos a lo largo del tiempo, permitiéndote recuperar versiones específicas más adelante. Es esencial en el desarrollo de software y facilita la colaboración entre equipos.</p>
 
+    <div class="diagram">
+      <div class="diagram-img">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Línea de tiempo -->
+          <line x1="100" y1="150" x2="700" y2="150" stroke="#2c3e50" stroke-width="4"/>
+
+          <!-- Puntos de versión -->
+          <circle cx="150" cy="150" r="15" fill="#3498db"/>
+          <text x="150" y="190" text-anchor="middle" fill="#3498db" font-weight="bold">v1.0</text>
+
+          <circle cx="300" cy="150" r="15" fill="#3498db"/>
+          <text x="300" y="190" text-anchor="middle" fill="#3498db" font-weight="bold">v1.1</text>
+
+          <circle cx="450" cy="150" r="15" fill="#3498db"/>
+          <text x="450" y="190" text-anchor="middle" fill="#3498db" font-weight="bold">v1.2</text>
+
+          <circle cx="600" cy="150" r="15" fill="#3498db"/>
+          <text x="600" y="190" text-anchor="middle" fill="#3498db" font-weight="bold">v2.0</text>
+
+          <!-- Rama -->
+          <line x1="450" y1="150" x2="525" y2="100" stroke="#e74c3c" stroke-width="3" stroke-dasharray="5,5"/>
+          <circle cx="525" cy="100" r="15" fill="#e74c3c"/>
+          <text x="525" y="80" text-anchor="middle" fill="#e74c3c" font-weight="bold">Bugfix</text>
+
+          <!-- Etiquetas -->
+          <text x="100" y="50" font-size="18" fill="#2c3e50" font-weight="bold">Línea de Tiempo del Control de Versiones</text>
+          <text x="150" y="230" text-anchor="middle">Commit</text>
+          <text x="300" y="230" text-anchor="middle">Commit</text>
+          <text x="450" y="230" text-anchor="middle">Commit</text>
+          <text x="600" y="230" text-anchor="middle">Merge</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison">
+    <div class="version-box local">
+      <h2>Versionamiento Local</h2>
+      <p>Los sistemas de versionamiento local mantienen un historial de cambios en tu computadora personal, sin necesidad de conexión a internet o servidores externos.</p>
+
+      <h3>Características principales</h3>
+      <ul class="feature-list">
+        <li>Todos los cambios se guardan en tu disco duro local</li>
+        <li>No requiere conexión a internet</li>
+        <li>Ideal para proyectos individuales</li>
+        <li>Ejemplos: Git local (sin remoto), RCS</li>
+        <li>Control total sobre el repositorio</li>
+      </ul>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h3>Ventajas</h3>
+          <ul class="feature-list">
+            <li>Simplicidad y rapidez</li>
+            <li>No depende de servicios externos</li>
+            <li>Mayor privacidad</li>
+            <li>Funciona sin conexión a internet</li>
+            <li>Sin costos adicionales</li>
+          </ul>
+        </div>
+
+        <div class="cons">
+          <h3>Desventajas</h3>
+          <ul class="feature-list">
+            <li>Dificulta la colaboración</li>
+            <li>Riesgo de pérdida de datos si el disco falla</li>
+            <li>Sin respaldo automático</li>
+            <li>Limitado a una sola máquina</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="version-box remote">
+      <h2>Versionamiento Remoto</h2>
+      <p>Los sistemas de versionamiento remoto almacenan el historial de cambios en servidores externos, facilitando la colaboración entre múltiples desarrolladores y equipos.</p>
+
+      <h3>Características principales</h3>
+      <ul class="feature-list">
+        <li>El repositorio principal está alojado en un servidor externo</li>
+        <li>Permite trabajar en equipo simultáneamente</li>
+        <li>Facilita la integración continua</li>
+        <li>Ejemplos: GitHub, GitLab, Bitbucket</li>
+        <li>Incluye herramientas adicionales como gestión de issues y pull requests</li>
+      </ul>
+
+      <div class="pros-cons">
+        <div class="pros">
+          <h3>Ventajas</h3>
+          <ul class="feature-list">
+            <li>Colaboración eficiente entre equipos</li>
+            <li>Respaldo automático en servidores externos</li>
+            <li>Acceso desde cualquier lugar y dispositivo</li>
+            <li>Herramientas avanzadas de revisión de código</li>
+            <li>Facilita la gestión de proyectos</li>
+          </ul>
+        </div>
+
+        <div class="cons">
+          <h3>Desventajas</h3>
+          <ul class="feature-list">
+            <li>Requiere conexión a internet</li>
+            <li>Posibles problemas de seguridad y privacidad</li>
+            <li>Puede tener costos asociados</li>
+            <li>Mayor complejidad en la configuración</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workflow">
+    <h2>Flujo de trabajo combinado: Local + Remoto</h2>
+    <p>En la práctica, la mayoría de los desarrolladores utilizan una combinación de versionamiento local y remoto, aprovechando las ventajas de ambos sistemas.</p>
+
+    <div class="workflow-grid">
+      <div class="workflow-step">
+        <span class="step-number">1</span>
+        <h3>Desarrollo local</h3>
+        <p>Trabajas en tu repositorio local, realizando commits frecuentemente para registrar los cambios importantes.</p>
+      </div>
+
+      <div class="workflow-step">
+        <span class="step-number">2</span>
+        <h3>Sincronización remota</h3>
+        <p>Periódicamente, envías (push) tus cambios al repositorio remoto para respaldarlos y compartirlos.</p>
+      </div>
+
+      <div class="workflow-step">
+        <span class="step-number">3</span>
+        <h3>Colaboración</h3>
+        <p>Otros miembros del equipo pueden descargar (pull) tus cambios y contribuir con los suyos.</p>
+      </div>
+
+      <div class="workflow-step">
+        <span class="step-number">4</span>
+        <h3>Revisión e integración</h3>
+        <p>Se utilizan herramientas como pull requests para revisar, discutir e integrar los cambios.</p>
+      </div>
+    </div>
+
+    <div class="diagram">
+      <div class="diagram-img">
+        <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Desarrollador 1 -->
+          <rect x="100" y="50" width="150" height="80" rx="10" fill="#3498db" opacity="0.8"/>
+          <text x="175" y="90" text-anchor="middle" fill="white" font-weight="bold">Repo Local</text>
+          <text x="175" y="110" text-anchor="middle" fill="white">Desarrollador 1</text>
+
+          <!-- Desarrollador 2 -->
+          <rect x="100" y="170" width="150" height="80" rx="10" fill="#3498db" opacity="0.8"/>
+          <text x="175" y="210" text-anchor="middle" fill="white" font-weight="bold">Repo Local</text>
+          <text x="175" y="230" text-anchor="middle" fill="white">Desarrollador 2</text>
+
+          <!-- Repositorio Remoto -->
+          <rect x="500" y="110" width="200" height="80" rx="10" fill="#2ecc71" opacity="0.8"/>
+          <text x="600" y="150" text-anchor="middle" fill="white" font-weight="bold">Repositorio Remoto</text>
+          <text x="600" y="170" text-anchor="middle" fill="white">GitHub/GitLab/Bitbucket</text>
+
+          <!-- Flechas -->
+          <path d="M250,80 L500,130" stroke="#2c3e50" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+          <text x="350" y="85" text-anchor="middle" fill="#2c3e50">Push</text>
+
+          <path d="M500,150 L250,100" stroke="#2c3e50" stroke-width="3" fill="none" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+          <text x="350" y="130" text-anchor="middle" fill="#2c3e50">Pull</text>
+
+          <path d="M250,200 L500,170" stroke="#2c3e50" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+          <text x="350" y="205" text-anchor="middle" fill="#2c3e50">Push</text>
+
+          <path d="M500,170 L250,220" stroke="#2c3e50" stroke-width="3" fill="none" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+          <text x="350" y="245" text-anchor="middle" fill="#2c3e50">Pull</text>
+
+          <!-- Marcadores de flecha -->
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#2c3e50"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="conclusion">
+    <h2>¿Cuál elegir?</h2>
+    <p>La elección entre versionamiento local y remoto depende de tus necesidades específicas:</p>
+
+    <ul class="feature-list">
+      <li><span class="highlight">Proyectos personales pequeños:</span> El versionamiento local puede ser suficiente.</li>
+      <li><span class="highlight">Proyectos en equipo:</span> El versionamiento remoto es prácticamente indispensable.</li>
+      <li><span class="highlight">Mejor enfoque:</span> Utilizar una combinación de ambos, trabajando localmente y sincronizando con un repositorio remoto.</li>
+    </ul>
+
+    <p>Recuerda que incluso trabajando con repositorios remotos, siempre tienes una copia local completa del proyecto, lo que te permite trabajar sin conexión y luego sincronizar cuando sea necesario.</p>
+  </section>
+</div>
+
+<footer>
+  <p>© 2025 - Guía de Versionamiento Local vs Remoto</p>
+</footer>
 </body>
-
 </html>
