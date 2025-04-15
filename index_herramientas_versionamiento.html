@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Herramientas de Versionamiento</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --accent-color: #e74c3c;
+      --dark-color: #34495e;
+      --light-color: #ecf0f1;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .intro {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .tool-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .tool-header {
+      padding: 1.5rem;
+      background: linear-gradient(45deg, var(--dark-color), var(--primary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .tool-icon {
+      font-size: 2.5rem;
+      margin-right: 1rem;
+    }
+
+    .tool-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .tool-content {
+      padding: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .tool-description {
+      margin-bottom: 1rem;
+    }
+
+    .features-list {
+      list-style: none;
+    }
+
+    .features-list li {
+      margin-bottom: 0.5rem;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .features-list li:before {
+      content: "✓";
+      color: var(--secondary-color);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .tool-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f8f9fa;
+    }
+
+    .popularity {
+      display: flex;
+      align-items: center;
+    }
+
+    .stars {
+      color: gold;
+      margin-right: 0.5rem;
+    }
+
+    .cta-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: var(--transition);
+    }
+
+    .cta-button:hover {
+      background-color: var(--dark-color);
+    }
+
+    .comparison-section {
+      margin-top: 3rem;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      box-shadow: var(--shadow);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .comparison-table th {
+      background-color: var(--dark-color);
+      color: white;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tool-tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
+    }
+
+    .git-tag {
+      background-color: #f05032;
+    }
+
+    .svn-tag {
+      background-color: #809cc9;
+    }
+
+    .mercurial-tag {
+      background-color: #999999;
+    }
+
+    .perforce-tag {
+      background-color: #404040;
+    }
+
+    .github-tag {
+      background-color: #4078c0;
+    }
+
+    .gitlab-tag {
+      background-color: #fc6d26;
+    }
+
+    .bitbucket-tag {
+      background-color: #0052cc;
+    }
+
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer a {
+      color: var(--light-color);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .tool-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .tool-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .comparison-table {
+        font-size: 0.9rem;
+      }
+
+      .comparison-table th,
+      .comparison-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tool-card {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .tool-card:nth-child(1) { animation-delay: 0.1s; }
+    .tool-card:nth-child(2) { animation-delay: 0.2s; }
+    .tool-card:nth-child(3) { animation-delay: 0.3s; }
+    .tool-card:nth-child(4) { animation-delay: 0.4s; }
+    .tool-card:nth-child(5) { animation-delay: 0.5s; }
+    .tool-card:nth-child(6) { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Herramientas de Versionamiento</h1>
+  <p class="subtitle">Guía completa de las mejores herramientas para gestionar versiones y colaborar en el desarrollo de software</p>
+</header>
+
+<div class="container">
+  <section class="intro">
+    <h2>¿Qué es el control de versiones?</h2>
+    <p>El control de versiones es un sistema que registra los cambios realizados en un archivo o conjunto de archivos a lo largo del tiempo, de modo que puedas recuperar versiones específicas más adelante. Es esencial para la colaboración en equipos de desarrollo, permitiendo trabajar simultáneamente en el mismo proyecto sin interferencias.</p>
+    <p>Estas herramientas son fundamentales para:</p>
+    <ul>
+      <li>Mantener un historial de cambios</li>
+      <li>Facilitar la colaboración en equipo</li>
+      <li>Revertir a versiones anteriores cuando sea necesario</li>
+      <li>Bifurcar el desarrollo para experimentar sin afectar el código principal</li>
+      <li>Garantizar la integridad del código a través del tiempo</li>
+    </ul>
+  </section>
+
+  <section class="tools-section">
+    <h2>Principales herramientas de versionamiento</h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #f05032, #f27047);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.27 15.93c1.02 2.01-.38 4.39-2.54 4.39-1.57 0-2.97-1.32-2.97-2.93 0-1.62 1.4-2.94 2.97-2.94.36 0 .69.07 1 .19v-4.99L12 12.39 4.27 9.65v4.99c.31-.12.64-.19 1-.19 1.57 0 2.97 1.32 2.97 2.94 0 1.61-1.4 2.93-2.97 2.93-2.12 0-3.5-2.33-2.55-4.35L4.27 4.92 12 7.66l7.73-2.74 1.54 11.01z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">Git</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Sistema de control de versiones distribuido diseñado para manejar proyectos pequeños o grandes con velocidad y eficiencia.</p>
+          <ul class="features-list">
+            <li>Sistema distribuido (cada desarrollador tiene una copia completa)</li>
+            <li>Branching y merging potentes y rápidos</li>
+            <li>Operaciones locales (no requiere conexión constante)</li>
+            <li>Integridad de datos garantizada (checksums)</li>
+            <li>Área de preparación (staging) flexible</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag git-tag">DVCS</span>
+            <span class="tool-tag git-tag">Open Source</span>
+            <span class="tool-tag git-tag">Distribuido</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★★★</div>
+            <span>Muy Popular</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #4078c0, #6ca0e8);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">GitHub</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Plataforma de desarrollo colaborativo basada en Git que facilita el alojamiento de proyectos, revisión de código y gestión del trabajo en equipo.</p>
+          <ul class="features-list">
+            <li>Alojamiento de repositorios Git en la nube</li>
+            <li>Issues, Pull Requests y Code Reviews</li>
+            <li>GitHub Actions (CI/CD integrado)</li>
+            <li>Pages, Packages y Container Registry</li>
+            <li>Integración con múltiples herramientas</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag github-tag">Plataforma</span>
+            <span class="tool-tag github-tag">Colaboración</span>
+            <span class="tool-tag github-tag">DevOps</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★★★</div>
+            <span>Líder global</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #fc6d26, #fd8e42);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23.6,0.4 L23.6,0.4 C23.2,-0.1 22.6,-0.1 22.1,0.4 L12.9,9.6 C12.8,9.7 12.6,9.8 12.4,9.8 C12.3,9.8 12.1,9.7 12,9.6 L2.8,0.4 C2.3,-0.1 1.7,-0.1 1.3,0.4 L0.4,1.3 C-0.1,1.7 -0.1,2.3 0.4,2.8 L9.6,12 C9.7,12.1 9.8,12.3 9.8,12.4 C9.8,12.6 9.7,12.8 9.6,12.9 L0.4,22.1 C-0.1,22.6 -0.1,23.2 0.4,23.6 L1.3,24.5 C1.7,25 2.3,25 2.8,24.5 L12,15.3 C12.1,15.2 12.3,15.1 12.4,15.1 C12.6,15.1 12.8,15.2 12.9,15.3 L22.1,24.5 C22.6,25 23.2,25 23.6,24.5 L24.5,23.6 C25,23.2 25,22.6 24.5,22.1 L15.3,12.9 C15.2,12.8 15.1,12.6 15.1,12.4 C15.1,12.3 15.2,12.1 15.3,12 L24.5,2.8 C25,2.3 25,1.7 24.5,1.3 L23.6,0.4 Z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">GitLab</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Plataforma completa de DevOps que combina control de versiones con herramientas de CI/CD, gestión de proyectos y seguridad.</p>
+          <ul class="features-list">
+            <li>Solución DevOps completa todo-en-uno</li>
+            <li>CI/CD integrado y potente</li>
+            <li>Disponible como SaaS y auto-hospedado</li>
+            <li>Gestión de proyectos con Boards y Epics</li>
+            <li>Seguridad y cumplimiento integrados</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag gitlab-tag">DevOps</span>
+            <span class="tool-tag gitlab-tag">CI/CD</span>
+            <span class="tool-tag gitlab-tag">Colaboración</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★★☆</div>
+            <span>Muy Popular</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #0052cc, #2684ff);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M0.778,1.576 L12,0 L23.222,1.576 L12,3.155 L0.778,1.576 Z M21.834,7.973 L12,9.813 L12,24 L21.834,22.166 L21.834,7.973 Z M2.166,7.973 L2.166,22.166 L10,23.622 L10,9.831 L2.166,7.973 Z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">Bitbucket</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Solución de alojamiento de código Git diseñada para equipos profesionales, con fuerte integración con otros productos de Atlassian.</p>
+          <ul class="features-list">
+            <li>Integración nativa con Jira y Trello</li>
+            <li>Pipelines de CI/CD integrados</li>
+            <li>Pull Requests y Code Reviews</li>
+            <li>Permisos granulares por rama</li>
+            <li>Repositorios privados ilimitados</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag bitbucket-tag">Atlassian</span>
+            <span class="tool-tag bitbucket-tag">Empresarial</span>
+            <span class="tool-tag bitbucket-tag">Jira</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★★☆</div>
+            <span>Popular</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #809cc9, #a1b7d6);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5.632,8.354 L12,4.632 L18.368,8.354 L12,12.075 L5.632,8.354 Z M20.271,10.293 L12,15.138 L3.729,10.293 L2.667,11.911 L11.5,17 L11.5,23 L12.5,23 L12.5,17 L21.333,11.911 L20.271,10.293 Z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">SVN (Subversion)</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Sistema de control de versiones centralizado que mantiene un único repositorio en el servidor con el historial completo de versiones.</p>
+          <ul class="features-list">
+            <li>Arquitectura cliente-servidor centralizada</li>
+            <li>Numeración secuencial simple de revisiones</li>
+            <li>Control de acceso a nivel de archivo</li>
+            <li>Seguimiento de cambios a nivel de directorio</li>
+            <li>Gestión eficiente de archivos binarios</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag svn-tag">Centralizado</span>
+            <span class="tool-tag svn-tag">Open Source</span>
+            <span class="tool-tag svn-tag">Apache</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★☆☆</div>
+            <span>Legacy</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header" style="background: linear-gradient(45deg, #999999, #cccccc);">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12,1 C5.925,1 1,5.925 1,12 C1,18.075 5.925,23 12,23 C18.075,23 23,18.075 23,12 C23,5.925 18.075,1 12,1 Z M16,16 L8,16 L8,13 L16,13 L16,16 Z M16,11 L8,11 L8,8 L16,8 L16,11 Z"></path>
+            </svg>
+          </div>
+          <div class="tool-name">Mercurial</div>
+        </div>
+        <div class="tool-content">
+          <p class="tool-description">Sistema de control de versiones distribuido enfocado en rendimiento y escalabilidad para manejar proyectos de gran tamaño.</p>
+          <ul class="features-list">
+            <li>Sistema distribuido similar a Git</li>
+            <li>Interfaz más simple y fácil de aprender</li>
+            <li>Extensible mediante extensiones</li>
+            <li>Manejo eficiente de archivos grandes</li>
+            <li>Excelente para proyectos con historia larga</li>
+          </ul>
+          <div class="tool-tags">
+            <span class="tool-tag mercurial-tag">DVCS</span>
+            <span class="tool-tag mercurial-tag">Open Source</span>
+            <span class="tool-tag mercurial-tag">Python</span>
+          </div>
+        </div>
+        <div class="tool-footer">
+          <div class="popularity">
+            <div class="stars">★★★☆☆</div>
+            <span>Nicho</span>
+          </div>
+          <button class="cta-button">Más Info</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison-section">
+    <h2>Comparativa de herramientas</h2>
+    <table class="comparison-table">
+      <thead>
+      <tr>
+        <th>Herramienta</th>
+        <th>Tipo</th>
+        <th>Modelo</th>
+        <th>Curva de aprendizaje</th>
+        <th>Integración</th>
+        <th>Popularidad</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Git</td>
+        <td>Control de versiones</td>
+        <td>Distribuido</td>
+        <td>Moderada-Alta</td>
+        <td>Excelente</td>
+        <td>Muy alta</td>
+      </tr>
+      <tr>
+        <td>GitHub</td>
+        <td>Plataforma colaborativa</td>
+        <td>Nube/SaaS</td>
+        <td>Baja-Moderada</td>
+        <td>Excelente</td>
+        <td>Líder</td>
+      </tr>
+      <tr>
+        <td>GitLab</td>
+        <td>Plataforma DevOps</td>
+        <td>Nube/Self-hosted</td>
+        <td>Moderada</td>
+        <td>Muy buena</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td>Bitbucket</td>
+        <td>Plataforma colaborativa</td>
+        <td>Nube/Self-hosted</td>
+        <td>Baja-Moderada</td>
+        <td>Excelente con Atlassian</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td>SVN</td>
+        <td>Control de versiones</td>
+        <td>Centralizado</td>
+        <td>Moderada</td>
+        <td>Limitada</td>
+        <td>Media (descendiendo)</td>
+      </tr>
+      <tr>
+        <td>Mercurial</td>
+        <td>Control de versiones</td>
+        <td>Distribuido</td>
+        <td>Baja-Moderada</td>
+        <td>Buena</td>
+        <td>Baja-Media</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="recommendation-section">
+    <h2>¿Cuál elegir?</h2>
+    <div class="intro">
+      <p>La elección de la herramienta de versionamiento adecuada depende de varios factores:</p>
+      <ul>
+        <li><strong>Tamaño del equipo:</strong> Para equipos pequeños, Git + GitHub puede ser suficiente. Para grandes organizaciones, GitLab o Bitbucket pueden ofrecer mejores controles de acceso y seguridad.</li>
+        <li><strong>Tipo de proyecto:
+          <li><strong>Tipo de proyecto:</strong> Para proyectos de código abierto, GitHub es ideal. Para proyectos empresariales con necesidades específicas de integración, Bitbucket o GitLab pueden ser mejores opciones.</li>
+          <li><strong>Necesidades de CI/CD:</strong> Si necesitas integración y entrega continuas potentes, GitLab ofrece las mejores herramientas nativas.</li>
+          <li><strong>Conocimientos previos:</strong> Mercurial puede ser más fácil de aprender si eres principiante, mientras que Git tiene una curva de aprendizaje más pronunciada pero mayor potencia.</li>
+          <li><strong>Integración con otras herramientas:</strong> Si ya utilizas otras herramientas de Atlassian como Jira, Bitbucket ofrece la mejor integración.</li>
+      </ul>
+      <p>En general, Git se ha convertido en el estándar de la industria para el control de versiones, y GitHub es la plataforma más popular para alojar repositorios, especialmente para proyectos de código abierto.</p>
+    </div>
+  </section>
+
+  <section class="resources-section">
+    <h2>Recursos de aprendizaje</h2>
+    <div class="intro">
+      <p>Para dominar estas herramientas, aquí tienes algunos recursos recomendados:</p>
+      <ul>
+        <li><strong>Git:</strong> <a href="#">Pro Git Book</a>, <a href="#">Git Tutorial</a>, <a href="#">Cheatsheet de comandos Git</a></li>
+        <li><strong>GitHub:</strong> <a href="#">GitHub Learning Lab</a>, <a href="#">GitHub Guides</a>, <a href="#">GitHub Documentation</a></li>
+        <li><strong>GitLab:</strong> <a href="#">GitLab University</a>, <a href="#">GitLab Documentation</a></li>
+        <li><strong>Bitbucket:</strong> <a href="#">Bitbucket Tutorials</a>, <a href="#">Atlassian Git Tutorials</a></li>
+        <li><strong>SVN:</strong> <a href="#">SVN Book</a>, <a href="#">TortoiseSVN Documentation</a></li>
+        <li><strong>Mercurial:</strong> <a href="#">Mercurial: The Definitive Guide</a>, <a href="#">Mercurial Tutorial</a></li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<footer class="footer">
+  <p>&copy; 2025 Guía de Herramientas de Versionamiento. Todos los derechos reservados.</p>
+  <p>Contacto: <a href="mailto:info@versionamiento.com">info@versionamiento.com</a></p>
+</footer>
+
+<script>
+  // JavaScript para interactividad (ejemplo simple)
+  document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.cta-button');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        const toolName = this.closest('.tool-card').querySelector('.tool-name').textContent;
+        alert(`Has seleccionado más información sobre ${toolName}. Esta funcionalidad estaría conectada a páginas detalladas en un sitio real.`);
+      });
+    });
+  });
+</script>
+</body>
+</html>
